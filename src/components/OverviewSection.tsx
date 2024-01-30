@@ -1,17 +1,17 @@
-import { useRef } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { Swiper, SwiperSlide } from "swiper/react"
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
-import abc from "@/assets/abc.jpg";
+import { fetchAllData } from "@/context/actions";
+import { GlobalContext } from "@/context/Provider";
 
 const OverviewSection = () => {
     const sliderRef = useRef(null);
 
-    // const handleSlidePrev = () => {
-    //     sliderRef.current.swiper.slidePrev();
-    // };
-    // const handleSlideNext = () => {
-    //     sliderRef.current.swiper.slideNext();
-    // };
+    const { getAllData, dispatch }: any = useContext(GlobalContext);
+
+    useEffect(() => {
+        fetchAllData()(dispatch);
+    }, [dispatch]);
 
     return (
         <section className="bg-[#212158] min-h-[80vh] py-24">
@@ -25,7 +25,7 @@ const OverviewSection = () => {
                 loop
                 ref={sliderRef}
                 autoplay={{
-                    delay: 5000,
+                    delay: 2000,
                     disableOnInteraction: false,
                 }}
 
@@ -34,11 +34,11 @@ const OverviewSection = () => {
                 modules={[Autoplay, Pagination, Navigation]}
                 className="py-24"
             >
-                {
-                    Array.from({ length: 6 }).map(() => (
-                        <SwiperSlide>
+                {getAllData?.data?.featured_project && getAllData?.data?.featured_project.map((item: any) => {
+                    return (
+                        <SwiperSlide key={item?.data.images?.list[0]?.id}>
                             <div className="relative">
-                                <img className="w-auto h-auto" src={abc} alt="abc" />
+                                <img className="w-full object-cover h-full" src={item?.data.images?.list[0].full_path} alt="abc" />
                                 <div className="text-white absolute w-full h-[100px] bg-black/70 bottom-6 p-5">
                                     <h4 className="text-lg leading-5 mb-2">Sheltech Felicia</h4>
                                     <p className="font-bold text-lg">
@@ -49,8 +49,8 @@ const OverviewSection = () => {
                                 </div>
                             </div>
                         </SwiperSlide>
-                    ))
-                }
+                    )
+                })}
 
             </Swiper>
         </section>

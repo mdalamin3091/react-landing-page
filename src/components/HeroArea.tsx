@@ -2,11 +2,17 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 
-import { useRef } from "react";
-import abc from "@/assets/abc.jpg";
+import { useContext, useEffect, useRef } from "react";
+import { GlobalContext } from "@/context/Provider";
+import { fetchAllData } from "@/context/actions";
 
 const HeroArea = () => {
     const sliderRef = useRef(null);
+    const { getAllData, dispatch }: any = useContext(GlobalContext);
+
+    useEffect(() => {
+        fetchAllData()(dispatch);
+    }, [dispatch]);
 
     const handleSlidePrev = () => {
         sliderRef.current?.swiper.slidePrev();
@@ -16,7 +22,7 @@ const HeroArea = () => {
     };
 
     return (
-        <section className="bg-white pt-52 hero-section relative after:absolute after:h-[400px] after:bg-[#212158] after:left-0 after:w-full after:bottom-6 -z-1">
+        <section className="bg-white pt-52 hero-section relative after:absolute after:h-[400px] after:bg-[#212158] after:left-0 after:w-full after:bottom-0 -z-1">
             <div className="grid grid-cols-12">
                 <div className="col-span-4 ml-32 h-[700px] relative">
                     <h2 className="text-[40px] uppercase leading-10 mb-10">
@@ -46,37 +52,19 @@ const HeroArea = () => {
                         loop
                         ref={sliderRef}
                         autoplay={{
-                            delay: 5000,
                             disableOnInteraction: false,
                         }}
                         pagination={false}
                         navigation={false}
                         modules={[Autoplay, Pagination, Navigation]}
                     >
-                        <SwiperSlide>
-                            <img className="w-auto h-auto" src={abc} alt="abc" />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <img className="w-auto h-auto" src={abc} alt="abc" />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <img className="w-auto h-auto" src={abc} alt="abc" />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <img className="w-auto h-auto" src={abc} alt="abc" />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <img className="w-auto h-auto" src={abc} alt="abc" />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <img className="w-auto h-auto" src={abc} alt="abc" />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <img className="w-auto h-auto" src={abc} alt="abc" />
-                        </SwiperSlide>
-                        <SwiperSlide>
-                            <img className="w-auto h-auto" src={abc} alt="abc" />
-                        </SwiperSlide>
+                        {getAllData?.data?.featured_project && getAllData?.data?.featured_project.map((item: any) => {
+                            return (
+                                <SwiperSlide key={item?.data.images?.list[0]?.id}>
+                                    <img className="w-full object-cover h-full" src={item?.data.images?.list[0].full_path} alt="abc" />
+                                </SwiperSlide>
+                            )
+                        })}
                     </Swiper>
                 </div>
             </div>
