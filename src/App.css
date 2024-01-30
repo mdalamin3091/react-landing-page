@@ -1,0 +1,7 @@
+.hero-section .swiper-slide-active {
+  width: 45% !important;
+}
+
+.hero-section .swiper-slide {
+  transition: all 0.6s ease 0s;
+}
